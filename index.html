@@ -1,0 +1,255 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Күзгү Алгоритм 2.0</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Orbitron:wght@500;600;700;800&display=swap');
+:root{--gold:#f6c85f;--gold2:#ffe7a0;--amber:#b97819;--ink:#100d07;--panel:rgba(28,22,11,.78);--muted:#c8b98e;--green:#b7ff75}
+*{box-sizing:border-box;scroll-behavior:smooth}
+body{margin:0;background:radial-gradient(ellipse at 50% 0%,#574016 0%,#211707 38%,#0b0a07 100%);color:#fff8e8;font-family:Manrope,Arial,sans-serif;overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;background:linear-gradient(125deg,transparent 30%,rgba(255,211,105,.06),transparent 70%)}
+#leaves{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:5}
+.leaf{position:absolute;top:-50px;color:#f4bf4f;text-shadow:0 0 18px #ffbf3d;animation:fall linear infinite;opacity:.8}
+@keyframes fall{to{transform:translate3d(120px,110vh,0) rotate(720deg)}}
+@keyframes pulse{50%{box-shadow:0 0 38px rgba(246,200,95,.38)}}
+@keyframes glow{50%{text-shadow:0 0 28px #ffc94d,0 0 55px #b97819}}
+@keyframes scan{0%{transform:translateY(-100%)}100%{transform:translateY(500%)}}
+#intro{position:fixed;inset:0;background:#080805;z-index:20;display:grid;place-items:center;text-align:center;padding:25px;transition:opacity .8s,visibility .8s}
+#intro.hide{opacity:0;visibility:hidden}
+.intro-box{max-width:700px}
+.error{font:700 clamp(25px,5vw,52px) Orbitron;color:#ffcf65;letter-spacing:2px}
+.error small{display:block;font:500 13px Manrope;color:#b9a477;letter-spacing:4px;margin-top:16px}
+.loading{display:none;color:var(--green);font:600 18px Orbitron;margin-top:34px}
+.loading.show{display:block}
+.progress{height:4px;background:#39301b;border-radius:20px;margin:17px auto;width:min(360px,80vw);overflow:hidden}
+.progress span{display:block;height:100%;width:0;background:linear-gradient(90deg,#a66a13,#ffe18a);transition:width 2s}
+.skip{margin-top:20px;background:none;border:1px solid #80602c;color:#e9d39a;padding:9px 18px;border-radius:30px;cursor:pointer}
+header{position:sticky;top:0;z-index:10;background:rgba(12,10,6,.78);backdrop-filter:blur(16px);border-bottom:1px solid rgba(246,200,95,.2)}
+.nav{max-width:1200px;margin:auto;padding:14px 22px;display:flex;align-items:center;justify-content:space-between;gap:18px}
+.logo{font:800 17px Orbitron;color:var(--gold);letter-spacing:1px;white-space:nowrap}
+nav{display:flex;gap:17px;flex-wrap:wrap;justify-content:center}
+nav a{font-size:12px;color:#e7d8b2;text-decoration:none;transition:.2s}
+nav a:hover{color:var(--gold)}
+.controls{display:flex;gap:8px}
+button,.btn{font:700 12px Manrope;cursor:pointer;border:0;border-radius:30px;padding:11px 16px;transition:.25s}
+.gold-btn{background:linear-gradient(120deg,#9d6414,#f7d477,#b77a1d);color:#1c1305;box-shadow:0 5px 22px #b8792533}
+.gold-btn:hover{transform:translateY(-3px);filter:brightness(1.12)}
+.ghost{background:transparent;border:1px solid #9d7839;color:#f6d88e}
+main{max-width:1160px;margin:auto;padding:0 22px}
+.hero{min-height:88vh;display:grid;align-items:center;grid-template-columns:1.15fr .85fr;gap:40px;padding:70px 0 55px}
+.eyebrow{color:var(--green);font:600 11px Orbitron;letter-spacing:3px}
+h1{font:800 clamp(42px,7vw,88px)/1.02 Orbitron;margin:20px 0;color:var(--gold2);text-shadow:0 0 30px #b77a2555}
+h1 span{color:var(--gold);animation:glow 3s infinite}
+.hero p{max-width:620px;color:#e3d5b4;font-size:17px;line-height:1.8}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
+.visual{height:420px;position:relative;display:grid;place-items:center}
+.orbit{width:min(370px,80vw);aspect-ratio:1;border:1px solid #e8b84e66;border-radius:50%;display:grid;place-items:center;box-shadow:0 0 70px #d18d2440,inset 0 0 60px #d18d241f;position:relative}
+.orbit:before,.orbit:after{content:"";position:absolute;border:1px dashed #f1c65c55;border-radius:50%;inset:28px;animation:spin 25s linear infinite}
+.orbit:after{inset:65px;animation-direction:reverse;animation-duration:18s}
+@keyframes spin{to{transform:rotate(360deg)}}
+.laptop{font-size:130px;filter:drop-shadow(0 0 30px #f3bc4c88);z-index:1}
+.binary{position:absolute;color:var(--green);font:12px Orbitron;opacity:.8;letter-spacing:5px}
+.b1{top:7%;left:0}.b2{right:-2%;bottom:15%}.b3{bottom:2%;left:13%}
+section{padding:78px 0;scroll-margin-top:75px}
+.section-head{text-align:center;margin-bottom:36px}
+.kicker{font:600 11px Orbitron;color:var(--green);letter-spacing:3px}
+h2{font:800 clamp(27px,4vw,46px) Orbitron;color:var(--gold2);margin:12px 0}
+.section-head p{color:var(--muted);line-height:1.7}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+.card{background:linear-gradient(145deg,rgba(61,45,17,.72),rgba(18,15,9,.88));border:1px solid #d5a94344;border-radius:22px;padding:27px;position:relative;overflow:hidden;box-shadow:0 15px 45px #0005}
+.card:after{content:"";position:absolute;inset:0 auto 0 0;width:3px;background:linear-gradient(transparent,var(--gold),transparent)}
+.number{font:700 12px Orbitron;color:var(--green);letter-spacing:2px}
+.card h3{font-size:21px;color:var(--gold2);margin:14px 0}
+.card p{color:#e0d3b6;line-height:1.85;margin:0}
+.quote{font-size:clamp(18px,2.5vw,25px)!important;line-height:1.7!important;color:#fff1c9!important}
+.timeline{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.step{border-top:2px solid var(--gold);padding:18px 14px;background:#2b210f99;border-radius:0 0 15px 15px}
+.step b{font:700 12px Orbitron;color:var(--green)}
+.step p{font-size:13px;color:#ddcfad;line-height:1.7}
+.script{display:grid;gap:12px}
+.script-row{display:grid;grid-template-columns:100px 1fr;gap:18px;align-items:start;padding:18px;border:1px solid #d6aa4a44;border-radius:16px;background:#211a0dba}
+.time{font:700 12px Orbitron;color:var(--green)}
+.script-row p{margin:0;color:#e8dabb;line-height:1.7}
+.qr-wrap{display:grid;grid-template-columns:1fr 310px;gap:25px;align-items:center}
+.qr-box{background:#fff;border-radius:20px;padding:18px;text-align:center;color:#171108;min-height:280px;display:grid;place-items:center}
+#qrcode img,#qrcode canvas{margin:auto;max-width:100%}
+input{width:100%;background:#0e0c07;border:1px solid #94702e;color:#fff1cb;border-radius:12px;padding:14px;margin:12px 0;outline:none}
+input:focus{border-color:var(--gold)}
+.note{font-size:12px;color:#c6b68f;line-height:1.7}
+footer{border-top:1px solid #b88b3b44;text-align:center;padding:35px 20px;color:#bca979;font-size:12px}
+.footer-logo{font:700 19px Orbitron;color:var(--gold);margin-bottom:12px}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(100px);background:#f2cb70;color:#211605;padding:12px 20px;border-radius:30px;z-index:30;font-weight:700;transition:.3s}
+.toast.show{transform:translateX(-50%) translateY(0)}
+@media(max-width:800px){.hero{grid-template-columns:1fr;text-align:center;padding-top:55px}.hero p{margin:auto}.hero-actions{justify-content:center}.visual{height:330px}.grid{grid-template-columns:1fr}.timeline{grid-template-columns:repeat(2,1fr)}.qr-wrap{grid-template-columns:1fr}.qr-box{min-height:250px}nav{display:none}.nav{justify-content:space-between}}
+@media(max-width:430px){main{padding:0 16px}.timeline{grid-template-columns:1fr}.script-row{grid-template-columns:1fr;gap:8px}.controls button{padding:9px 11px}.visual{height:290px}.laptop{font-size:105px}}
+
+.film-wrap{max-width:980px;margin:0 auto;position:relative}
+.film-frame{position:relative;border-radius:24px;overflow:hidden;border:1px solid #d5a94366;box-shadow:0 20px 70px #000a,0 0 90px #d18d2433;background:#000}
+.film-frame video{display:block;width:100%;height:auto;aspect-ratio:848/480;background:#000}
+.film-bar{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:18px}
+.film-cap{text-align:center;color:var(--muted);font-size:13px;margin-top:14px;line-height:1.7}
+.ada-grid{display:grid;grid-template-columns:.85fr 1.15fr;gap:20px;align-items:stretch}
+.ada-left{display:flex;flex-direction:column;gap:18px}
+.mono-card{display:grid;place-items:center;padding:34px 20px;text-align:center}
+.ada-photo{display:block;width:min(230px,70vw);height:280px;object-fit:cover;object-position:center 20%;border:1px solid #e8b84e88;border-radius:18px;box-shadow:0 0 40px #d18d2440,0 12px 30px #0008}
+.mono{width:min(230px,70vw);aspect-ratio:1;border-radius:50%;border:1px solid #e8b84e88;display:grid;place-items:center;position:relative;box-shadow:0 0 60px #d18d2450,inset 0 0 50px #d18d2430;font:800 62px Orbitron;color:var(--gold2);text-shadow:0 0 26px #ffbf3d}
+.mono:before{content:"";position:absolute;inset:18px;border:1px dashed #f1c65c66;border-radius:50%;animation:spin 22s linear infinite}
+.years{font:700 13px Orbitron;color:var(--green);letter-spacing:3px;margin-top:22px}
+.mono-card h3{margin:10px 0 4px}
+.mono-card small{color:var(--muted);line-height:1.6}
+.codecard{font:12.5px/1.75 "Courier New",monospace;color:#f1dfae;white-space:pre-wrap;overflow-x:auto}
+.codecard .c{color:#8f8159}.codecard .k{color:var(--gold)}.codecard .g{color:var(--green)}
+.ada-facts{display:flex;flex-direction:column;gap:12px;margin-top:6px}
+.fact-row{display:grid;grid-template-columns:78px 1fr;gap:14px;padding:14px 0;border-top:1px solid #d6aa4a33}
+.fact-row:first-child{border-top:0}
+.fact-row b{font:700 14px Orbitron;color:var(--green)}
+.fact-row p{font-size:15px;line-height:1.75}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:20px}
+.stat{background:#2b210f99;border:1px solid #d6aa4a33;border-radius:16px;padding:16px;text-align:center}
+.stat b{display:block;font:800 26px Orbitron;color:var(--gold2)}
+.stat span{font-size:12px;color:var(--muted);line-height:1.5}
+.bridge{text-align:center;margin-top:20px;padding:26px 22px}
+@media(max-width:800px){.ada-grid{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:430px){.fact-row{grid-template-columns:1fr;gap:4px}.mono{font-size:50px}}
+</style>
+
+<div id="intro">
+ <div class="intro-box">
+  <div class="error">ERROR 404<small>AUTUMN NOT FOUND</small></div>
+  <div class="loading" id="loading">SYSTEM LOADING... <span id="percent">0%</span><div class="progress"><span id="bar"></span></div><small style="font:12px Manrope;color:#b9a477">Күзгү IT дүйнөсү даярдалууда</small></div>
+  <button class="skip" onclick="enterSite()">Өткөрүп жиберүү ↗</button>
+ </div>
+</div>
+<div id="leaves"></div>
+<header><div class="nav">
+ <div class="logo">AUTUMN<span style="color:#fff">/</span>CODE 2.0</div>
+ <nav><a href="#film">Видео</a><a href="#ada">Ада Лавлейс</a><a href="#home">Башкы бет</a><a href="#journey">2 жылдык жол</a><a href="#profession">IT кесиби</a><a href="#graduate">Бүтүрүүчү курс</a><a href="#video">QR-видео</a></nav>
+ <div class="controls"><button class="ghost" id="musicBtn" onclick="toggleMusic()">♫ Музыка</button></div>
+</div></header>
+<main>
+
+<section id="film" style="padding-top:44px">
+ <div class="section-head"><div class="kicker">00 / OPENING SCENE</div><h2>Күзгү алгоритм</h2><p>Алтын жалбырактар менен санариптик дүйнөнүн жолугушуусу.</p></div>
+ <div class="film-wrap">
+  <!-- СЮДА ВСТАВЬ СВОЙ ТЕГ VIDEO С id="film-video" -->
+  <div class="film-bar"><button class="gold-btn" id="soundBtn" onclick="toggleSound()">🔇 Үнүн күйгүзүү</button><a class="btn ghost" href="#ada" style="text-decoration:none">Кийинки: биринчи программист ↓</a></div>
+  <div class="film-cap">Видео үнсүз башталат. Үнүн күйгүзүү үчүн жогорудагы баскычты басыңыз.</div>
+ </div>
+</section>
+<section id="ada">
+ <div class="section-head"><div class="kicker">01 / THE FIRST PROGRAMMER</div><h2>Ада Лавлейс</h2><p>Дүйнөдөгү биринчи программист деп эсептелген аял.</p></div>
+ <div class="ada-grid">
+  <div class="ada-left">
+   <article class="card mono-card">
+    <img class="ada-photo" src="https://upload.wikimedia.org/wikipedia/commons/a/a4/Ada_Lovelace_portrait.jpg" alt="Портрет Ады Лавлейс" loading="lazy">
+    <div class="years">1815 — 1852</div>
+    <h3>Ада Лавлейс</h3>
+    <small>Огаста Ада Кинг, Лавлейс графинясы. Англиялык математик жана жазуучу.</small>
+   </article>
+   <article class="card">
+    <div class="number">NOTE G / 1843</div>
+    <pre class="codecard"><span class="c">// Бернулли сандарын эсептөө</span>
+<span class="k">for</span> n <span class="k">in</span> 1..<span class="g">N</span>:
+    операция(n)
+    натыйжа.сактоо()
+<span class="c">// машина ар кадамды аткарат</span></pre>
+    <p class="note" style="margin-top:10px">Бул бүгүнкү код стилинде жасалган иллюстрация, Ада жазган түп нуска эмес.</p>
+   </article>
+  </div>
+  <article class="card">
+   <div class="number">WHO WAS ADA?</div>
+   <h3>Алгачкы программа кантип жаралган</h3>
+   <div class="ada-facts">
+    <div class="fact-row"><b>1815</b><p>10-декабрда Лондондо туулган. Атасы белгилүү англис акыны лорд Байрон. Апасы ага кичинесинен математика менен илимди үйрөтүүгө аракет кылган.</p></div>
+    <div class="fact-row"><b>1833</b><p>Математик Чарльз Бэббидж менен таанышкан. Ал «Аналитикалык машина» деген механикалык компьютердин долбоору үстүндө иштеп жаткан.</p></div>
+    <div class="fact-row"><b>1843</b><p>Италиялык инженердин макаласын которуп, өзүнүн узун «Эскертүүлөрүн» кошкон. Ошол жерде Бернулли сандарын машина менен эсептөөнүн кадам-кадам алгоритми болгон. Аны биринчи жарыяланган компьютер программасы деп эсептешет.</p></div>
+    <div class="fact-row"><b>Идея</b><p>Ада машина сандар менен гана эмес, символдор, тексттер жана музыка менен да иштей алат деп жазган. Бул бүгүнкү компьютерлердин негизги идеясы.</p></div>
+    <div class="fact-row"><b>1852</b><p>27-ноябрда 36 жашында дүйнөдөн кайткан.</p></div>
+    <div class="fact-row"><b>Бүгүн</b><p>Анын урматына «Ada» программалоо тили аталган. Ар жылы октябрдын экинчи шейшембисинде Ада Лавлейс күнү белгиленет.</p></div>
+   </div>
+  </article>
+ </div>
+ <div class="stats">
+  <div class="stat"><b>1815</b><span>туулган жылы</span></div>
+  <div class="stat"><b>1843</b><span>биринчи алгоритм жарыяланган жыл</span></div>
+  <div class="stat"><b>36</b><span>жашында көз жумган</span></div>
+  <div class="stat"><b>183</b><span>жыл мурун алгачкы программа жазылган</span></div>
+ </div>
+ <article class="card bridge"><p class="quote">Ада 183 жыл мурун программа жазган. Бүгүн биз да ошол жолду улантып, өз кодубузду жазып жатабыз.</p><div style="margin-top:16px"><a class="btn gold-btn" href="#home" style="text-decoration:none">Презентацияны баштайбыз ↓</a></div></article>
+</section>
+<section class="hero" id="home">
+ <div>
+  <div class="eyebrow">✦ DIGITAL AUTUMN EXPERIENCE / 2026</div>
+  <h1>КҮЗГҮ<br><span>АЛГОРИТМ</span><br>2.0</h1>
+  <p>Алтын жалбырактар, санариптик дүйнө жана биздин эки жылдык IT сапарыбыз. Күз — өзгөрүүнүн мезгили, ал эми код — келечекти жаратуунун тили.</p>
+  <div class="hero-actions"><a class="btn gold-btn" href="#journey" style="text-decoration:none">Саякатты баштоо ↓</a><a class="btn ghost" href="#video" style="text-decoration:none">Вау-эффектти көрүү ✦</a></div>
+ </div>
+ <div class="visual"><div class="orbit"><div class="laptop">💻</div><div class="binary b1">0101 1010 0101</div><div class="binary b2">1010 0011 1100</div><div class="binary b3">0100 1110 101</div></div></div>
+</section>
+<section id="journey">
+ <div class="section-head"><div class="kicker">01 / OUR EVOLUTION</div><h2>Эки жылдык эволюция</h2><p>730 күн. Миңдеген аракет. Бир чоң үй-бүлө.</p></div>
+ <div class="grid">
+  <article class="card"><div class="number">01 — INTRO</div><h3>Киришүү</h3><p class="quote">«Табият жалбырактарын төксө, биз — келечектин коддорун жазабыз. Күз — бул жыйынтык, ал эми IT — бул чексиздик.»</p></article>
+  <article class="card"><div class="number">02 — JOURNEY</div><h3>2 жылдык жол</h3><p class="quote">«Эки жыл мурун биз жөн гана колдонуучу (User) элек. Бүгүн биз — жаңы дүйнөнү куруучуларбыз (Creator). 730 күн — миллиондогон сап код жана бир чоң үй-бүлө.»</p></article>
+ </div>
+ <div class="timeline" style="margin-top:20px">
+  <div class="step"><b>01 / START</b><p>Биринчи кадам. Жаңы дүйнөгө алгачкы кирүү.</p></div>
+  <div class="step"><b>02 / LEARN</b><p>Сабактар, изденүү жана жаңы билимдер.</p></div>
+  <div class="step"><b>03 / CREATE</b><p>Код жазуу, долбоорлор жана биргелешкен аракет.</p></div>
+  <div class="step"><b>04 / EVOLVE</b><p>Колдонуучудан жаратуучуга айланган жол.</p></div>
+ </div>
+</section>
+<section id="profession">
+ <div class="section-head"><div class="kicker">02 / FUTURE LANGUAGE</div><h2>Кесипти даңазалоо</h2><p>Биздин курал — идея. Биздин тилибиз — код.</p></div>
+ <article class="card"><div class="number">THE POWER OF IT</div><h3>Келечектин тили</h3><p class="quote">«Башка кесиптер дүйнөнү өзгөртүүгө аракет кылса, IT аны бир баскыч (Enter) менен жаңылайт. Биздин тил — бул келечектин тили.»</p></article>
+ <div class="grid" style="margin-top:18px">
+  <article class="card"><h3>01 / IDEA</h3><p>Ар бир чоң технология кичинекей идеядан башталат.</p></article>
+  <article class="card"><h3>02 / CODE</h3><p>Код — ойду ишке ашырган күч. Ар бир сапта жаңы мүмкүнчүлүк бар.</p></article>
+ </div>
+</section>
+<section id="graduate">
+ <div class="section-head"><div class="kicker">03 / RELEASE 2026</div><h2>Жаңы версиянын башталышы</h2><p>Акыркы күзгү бал — жаңы мүмкүнчүлүктөрдүн босогосу.</p></div>
+ <article class="card" style="text-align:center;padding:45px 28px">
+  <div style="font-size:44px">🍂 ✦ 💻 ✦ 🍂</div>
+  <p class="quote" style="margin:22px auto;max-width:850px">«Бул биздин акыркы күзгү балыбыз, бирок бул аягы эмес — бул биздин жаңы версиябыздын (Release 2026) башталышы!»</p>
+  <div class="number">SYSTEM STATUS: READY FOR THE FUTURE</div>
+ </article>
+</section>
+
+<section id="video">
+ <div class="section-head"><div class="kicker">04 / SCAN THE FUTURE</div><h2>Оюнду скан кыл да, сынап көр!</h2><p>QR-кодду скан кылып же шилтеме аркылуу оюнга өтүңүз.</p></div>
+ <div class="qr-wrap">
+  <div class="card">
+   <div class="number">INTERACTIVE GAME</div>
+   <h3>Кыргыз тамактары</h3>
+   <p>Оюнга кошулуп, кыргыз улуттук тамактары тууралуу билимиңди текшер!</p>
+   <a class="btn gold-btn" href="https://ramzanzorobaev6-dev.github.io/Kyrgyz_Food_Game/" target="_blank" rel="noopener noreferrer" style="display:inline-block;text-decoration:none;margin-top:18px">Оюнду ачуу ↗</a>
+   <p class="note" style="margin-top:18px">Оюнду ачуу үчүн баскычты басыңыз же QR-кодду телефонуңуз менен скан кылыңыз.</p>
+  </div>
+  <div class="qr-box">
+   <div id="game-qrcode"></div>
+   <b>ОЮНГА ӨТҮҮ ҮЧҮН СКАН КЫЛ</b>
+  </div>
+ </div>
+</section>
+
+</main>
+<footer><div class="footer-logo">AUTUMN ALGORITHM 2.0</div><div>«Биз бүтүрүүчүбүз, бирок биздин программа эч качан өчпөйт!»</div><p><strong>Исполнители:</strong> Раяна · Гүлмира · Айбике · Касым · Рамзан</p><p>© 2026 • GOLDEN CODE • RELEASE 2026</p></footer>
+<div class="toast" id="toast">Даяр!</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+const intro=document.getElementById('intro'),loading=document.getElementById('loading'),bar=document.querySelector('.progress span'),percent=document.getElementById('percent');
+let entered=false;
+setTimeout(()=>{loading.classList.add('show');bar.style.width='100%';let n=0;let timer=setInterval(()=>{n+=5;percent.textContent=Math.min(n,100)+'%';if(n>=100){clearInterval(timer);setTimeout(enterSite,450)}},90)},1500);
+function enterSite(){if(entered)return;entered=true;intro.classList.add('hide');const v=document.getElementById('film-video');if(v){v.currentTime=0;const p=v.play();if(p&&p.catch)p.catch(()=>{})}}
+function toggleSound(){const v=document.getElementById('film-video'),b=document.getElementById('soundBtn');if(!v)return;v.muted=!v.muted;b.textContent=v.muted?'🔇 Үнүн күйгүзүү':'🔊 Үнүн өчүрүү';if(!v.muted&&v.paused){const p=v.play();if(p&&p.catch)p.catch(()=>{})}}
+const leafLayer=document.getElementById('leaves');
+for(let i=0;i<24;i++){let e=document.createElement('div');e.className='leaf';e.textContent=['🍂','🍁','✦'][i%3];e.style.left=Math.random()*100+'%';e.style.animationDuration=(9+Math.random()*14)+'s';e.style.animationDelay=(-Math.random()*20)+'s';e.style.fontSize=(13+Math.random()*18)+'px';leafLayer.appendChild(e)}
+let audioCtx=null,osc=null,gain=null,musicOn=false;
+function toggleMusic(){const btn=document.getElementById('musicBtn');if(!musicOn){audioCtx=new(window.AudioContext||window.webkitAudioContext)();osc=audioCtx.createOscillator();gain=audioCtx.createGain();osc.type='sine';osc.frequency.value=174.61;gain.gain.value=.025;osc.connect(gain);gain.connect(audioCtx.destination);osc.start();musicOn=true;btn.textContent='♫ Музыка: ON';showToast('Фондук үн күйгүзүлдү');}else{osc.stop();audioCtx.close();musicOn=false;btn.textContent='♫ Музыка';showToast('Музыка өчүрүлдү')}}
+const gameUrl='https://ramzanzorobaev6-dev.github.io/Kyrgyz_Food_Game/';
+if(typeof QRCode!=='undefined'){
+ new QRCode(document.getElementById('game-qrcode'),{text:gameUrl,width:220,height:220,colorDark:'#171108',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.H});
+}
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2600)}
+</script>
+
+</body></html>
